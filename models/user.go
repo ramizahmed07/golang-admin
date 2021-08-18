@@ -5,5 +5,5 @@ type User struct {
 	FirstName string
 	LastName  string
 	Email     string `gotm:"unique"`
-	Password  string
+	Password  []byte
 }
