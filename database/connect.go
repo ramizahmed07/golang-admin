@@ -7,6 +7,7 @@ import (
 
 var dsn = "root:password@tcp(127.0.0.1:3306)/admindb?charset=utf8mb4&parseTime=True&loc=Local"
 
+// Connect - connects to database
 func Connect() {
 	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
