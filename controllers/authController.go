@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/ramizahmed07/golang-admin/database"
 	"github.com/ramizahmed07/golang-admin/models"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -28,6 +29,6 @@ func Register(c *fiber.Ctx) error {
 		Email:     data["email"],
 		Password:  password,
 	}
+	database.DB.Create(&user)
 	return c.JSON(user)
-	// return c.SendString("Hello, World 👋!")
 }
