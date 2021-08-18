@@ -4,6 +4,6 @@ type User struct {
 	ID        uint
 	FirstName string
 	LastName  string
-	Email     string
+	Email     string `gotm:"unique"`
 	Password  string
 }
