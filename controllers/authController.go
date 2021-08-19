@@ -9,26 +9,56 @@ import (
 
 // Register - home route controller
 func Register(c *fiber.Ctx) error {
-	var data map[string]string
-	if err := c.BodyParser(&data); err != nil {
+	var payload = map[string]string{}
+	if err := c.BodyParser(&payload); err != nil {
 		return err
 	}
 
-	if data["password"] != data["password_confirm"] {
+	if payload["password"] != payload["password_confirm"] {
 		c.Status(400)
 		return c.JSON(fiber.Map{
-			"message": "passwords don't match",
+			"message": "Passwords don't match",
 		})
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
+	password, _ := bcrypt.GenerateFromPassword([]byte(payload["password"]), 14)
 
 	user := models.User{
-		FirstName: data["first_name"],
-		LastName:  data["last_name"],
-		Email:     data["email"],
+		FirstName: payload["first_name"],
+		LastName:  payload["last_name"],
+		Email:     payload["email"],
 		Password:  password,
 	}
 	database.DB.Create(&user)
+
+	return c.JSON(user)
+}
+
+// Login - logins user
+func Login(c *fiber.Ctx) error {
+	var payload map[string]string
+
+	if err := c.BodyParser(&payload); err != nil {
+		return err
+	}
+
+	var user models.User
+
+	database.DB.Where("email = ?", payload["email"]).First(&user)
+
+	if user.ID == 0 {
+		c.Status(404)
+		return c.JSON(fiber.Map{
+			"message": "User not found",
+		})
+	}
+
+	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(payload["password"])); err != nil {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": "Password is incorrect",
+		})
+	}
+
 	return c.JSON(user)
 }
