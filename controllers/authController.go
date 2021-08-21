@@ -80,7 +80,7 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
-// User - gets user
+// User - gets logged in user
 func User(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 	id, _ := utils.ParseJwt(cookie)
