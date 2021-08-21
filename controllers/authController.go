@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/ramizahmed07/golang-admin/database"
 	"github.com/ramizahmed07/golang-admin/models"
@@ -26,14 +25,12 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(payload["password"]), 14)
-
 	user := models.User{
 		FirstName: payload["first_name"],
 		LastName:  payload["last_name"],
 		Email:     payload["email"],
-		Password:  password,
 	}
+	user.SetPassword(payload["password"])
 	database.DB.Create(&user)
 
 	return c.JSON(user)
@@ -82,11 +79,6 @@ func Login(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "success",
 	})
-}
-
-// Claims - claims struct for token parsing
-type Claims struct {
-	jwt.StandardClaims
 }
 
 // User - gets user
