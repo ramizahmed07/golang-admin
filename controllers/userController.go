@@ -39,3 +39,21 @@ func GetUser(c *fiber.Ctx) error {
 	database.DB.First(&user)
 	return c.JSON(user)
 }
+
+// UpdateUser - updates user by id
+func UpdateUser(c *fiber.Ctx) error {
+	id, _ := strconv.Atoi(c.Params("id"))
+	user := models.User{
+		ID: uint(id),
+	}
+	if err := c.BodyParser(&user); err != nil {
+		return err
+	}
+	// fmt.Println(user)
+	// database.DB.First(&user)
+
+	// user.FirstName = "jinzhu 2"
+	// user.Age = 100
+	database.DB.Model(&user).Updates(user)
+	return c.JSON(user)
+}
