@@ -8,7 +8,6 @@ import (
 	"github.com/ramizahmed07/golang-admin/database"
 	"github.com/ramizahmed07/golang-admin/models"
 	utils "github.com/ramizahmed07/golang-admin/utils"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Register - home route controller
@@ -55,7 +54,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(payload["password"])); err != nil {
+	if err := user.ComparePassword(payload["password"]); err != nil {
 		c.Status(400)
 		return c.JSON(fiber.Map{
 			"message": "Password is incorrect",
