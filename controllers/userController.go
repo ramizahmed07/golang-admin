@@ -49,11 +49,14 @@ func UpdateUser(c *fiber.Ctx) error {
 	if err := c.BodyParser(&user); err != nil {
 		return err
 	}
-	// fmt.Println(user)
-	// database.DB.First(&user)
-
-	// user.FirstName = "jinzhu 2"
-	// user.Age = 100
 	database.DB.Model(&user).Updates(user)
 	return c.JSON(user)
+}
+
+// DeleteUser - delete user by id
+func DeleteUser(c *fiber.Ctx) error {
+	id, _ := strconv.Atoi(c.Params("id"))
+	var user models.User
+	database.DB.Where("id = ?", id).Delete(user)
+	return nil
 }
