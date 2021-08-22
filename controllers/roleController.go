@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ramizahmed07/golang-admin/database"
 	"github.com/ramizahmed07/golang-admin/models"
@@ -23,6 +25,23 @@ func CreateRole(c *fiber.Ctx) error {
 	}
 
 	database.DB.Create(&role)
+
+	return c.JSON(role)
+}
+
+// UpdateRole - updates role
+func UpdateRole(c *fiber.Ctx) error {
+	id, _ := strconv.Atoi(c.Params("id"))
+
+	role := models.Role{
+		ID: uint(id),
+	}
+
+	if err := c.BodyParser(&role); err != nil {
+		return err
+	}
+
+	database.DB.Model(&role).Updates(role)
 
 	return c.JSON(role)
 }
