@@ -16,6 +16,16 @@ func AllRoles(c *fiber.Ctx) error {
 	return c.JSON(roles)
 }
 
+// GetRole - gets user by id
+func GetRole(c *fiber.Ctx) error {
+	id, _ := strconv.Atoi(c.Params("id"))
+	role := models.Role{
+		ID: uint(id),
+	}
+	database.DB.First(&role)
+	return c.JSON(role)
+}
+
 // CreateRole - creates role
 func CreateRole(c *fiber.Ctx) error {
 	var role models.Role
