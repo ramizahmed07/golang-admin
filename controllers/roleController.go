@@ -55,3 +55,11 @@ func UpdateRole(c *fiber.Ctx) error {
 
 	return c.JSON(role)
 }
+
+// DeleteRole - delete user by id
+func DeleteRole(c *fiber.Ctx) error {
+	id, _ := strconv.Atoi(c.Params("id"))
+	var role models.Role
+	database.DB.Where("id = ?", id).Delete(role)
+	return nil
+}
